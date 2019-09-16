@@ -1,0 +1,43 @@
+<div class="accordion" id="accordionExample">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Parameters
+                </button>
+            </h2>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                <div class="alert alert-dark" role="alert">
+                    <h4 id="statsCurrentPrice">{{LAST_PRICE}}</h4>
+                    <div class="text-wrap">Loaded in {{PROCESS_TIME}}</div>
+                </div>
+                <div class="legend">
+                    <div class="alert alert-dark" role="alert">
+                        <span class="badge badge-danger">size > {{LEVEL_HIGH}}</span>
+                        <span class="badge badge-warning">size > {{LEVEL_MID}}</span>
+                        <span class="badge badge-secondary">size > {{LEVEL_LOW}}</span>
+                    </div>
+                    <div class="alert alert-dark" role="alert">
+                        <h6>Price range</h6>
+                        <span>{{PRICE_RANGE}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="headingTwo">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Instrument info
+                </button>
+            </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">{{INSTRUMENT}}</div>
+        </div>
+    </div>
+</div>

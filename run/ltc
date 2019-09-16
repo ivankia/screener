@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+../ethla orderbook:get \
+  --symbol=LTCU19 \
+  --pf=0.005 --pt=0.01 \
+  --s=500 --limit=50 \
+  --l1=200000 --l2=300000 --l3=600000 \
+  --schema=discrete_levels --floating=5

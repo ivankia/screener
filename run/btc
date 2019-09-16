@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+/root/ethla/ethla orderbook:get \
+  --symbol=XBTUSD \
+  --pf=7000 --pt=20000 \
+  --s=1 --limit=50 \
+  --l1=100 --l2=150 --l3=300 \
+  --schema=discrete_levels \
+  --floating=2

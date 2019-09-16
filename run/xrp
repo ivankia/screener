@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+../ethla orderbook:get \
+  --symbol=XRPU19 \
+  --pf=0.00001000 --pt=0.00005 \
+  --s=100 --limit=50 \
+  --l1=10000000000 --l2=20000000000 --l3=25000000000 \
+  --schema=discrete_levels --floating=9

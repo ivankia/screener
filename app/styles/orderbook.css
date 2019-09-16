@@ -1,0 +1,50 @@
+body {
+    background-color: darkslategray;
+    font-size: 9px;
+    font-weight: bolder;
+    padding: 10px;
+}
+
+table {
+    background-color: slategray;
+}
+
+th {
+    font-size: 12px;
+}
+
+th span {
+    width: 100px;
+}
+
+tr {
+    text-align: center;
+}
+
+td {
+    min-width: 75px;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+td span {
+    width: 100%;
+    display: inline-block;
+}
+
+.legend, .stats {
+    font-size: 20px;
+}
+
+.stats .card {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+#spinner {
+    display: none;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    vertical-align: center;
+}

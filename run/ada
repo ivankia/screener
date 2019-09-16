@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+../ethla orderbook:get \
+  --symbol=ADAU19 \
+  --pf=0.00000300 --pt=0.00003 \
+  --s=30000000000 --limit=50 \
+  --l1=500000000000 --l2=800000000000 --l3=1000000000000 \
+  --schema=discrete_levels \
+  --floating=15 \
+  --console=1
