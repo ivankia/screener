@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+php /root/ethla/ethla orderbook:get --symbol=ADAZ19 \
+    --f=adaz19 \
+    --pf=0 \
+    --pt=0.001 \
+    --s=1 --limit=50 \
+    --l1=0.00010000 --l2=0.00050000 --l3=0.00100000 \
+    --schema=discrete_levels \
+    --floating=8 &

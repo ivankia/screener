@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+php /root/ethla/ethla orderbook:get --symbol=LTCZ19 \
+    --f=ltcz19 \
+    --pf=0.0001 \
+    --pt=1 \
+    --s=5 --limit=50 \
+    --l1=100000 --l2=200000 --l3=300000 \
+    --schema=discrete_levels \
+    --floating=5
