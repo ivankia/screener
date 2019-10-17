@@ -1,6 +1,6 @@
 body {
     background-color: darkslategray;
-    font-size: 9px;
+    font-size: 0.65em;
     font-weight: bolder;
     padding: 10px;
 }
@@ -10,7 +10,7 @@ table {
 }
 
 th {
-    font-size: 12px;
+    font-size: 0.8em;
 }
 
 th span {
@@ -47,4 +47,8 @@ td span {
     top: 25%;
     left: 50%;
     vertical-align: center;
+}
+
+#instrument_info {
+    display: none;
 }

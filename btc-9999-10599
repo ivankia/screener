@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-php /root/ethla/ethla orderbook:get --symbol=XBTUSD \
-    --f=xbtusd_9999-10599 \
-    --pf=9999 \
-    --pt=10599 \
-    --s=25 --limit=30 \
-    --l1=200 --l2=300 --l3=500 \
-    --schema=discrete_levels \
-    --floating=2 &

@@ -461,7 +461,7 @@ class Orderbook extends Command
      *
      * @return string
      */
-    public function tableHTMLPage($headers, $data, $refresh = 30)
+    public function tableHTMLPage($headers, $data, $refresh = 180)
     {
         $out = '
         <!doctype html><html lang="en">
@@ -488,16 +488,21 @@ class Orderbook extends Command
                 </div>
                 <div class="container">
                   <div class="row">
-                    <div class="col-8" id="mainFrame">                    
+                    <div class="col-12" id="mainFrame">                    
         ';
 
         $out .= $this->genTableHtml($headers, $data, true, $this->filename);
         $out .= '
                     </div>
-                <div class="col-4">' . $this->getLegend($this->getParam('discrete_levels')) . '</div>
               </div>
             </div>            
         ';
+//        $out .= '
+//                    </div>
+//                <div class="col-4">' . $this->getLegend($this->getParam('discrete_levels')) . '</div>
+//              </div>
+//            </div>            
+//        ';
 
         return $out . '
             </body></html>
@@ -1095,15 +1100,26 @@ class Orderbook extends Command
                         . $this->getLastPrice() .  '
                     </span>
                 </div>
-                
-                <div class="card">
-                    <div class="card-body">
-                        <h6>Instrument info</h6>
-                        ' . join('<br />', $instrument) . '
-                    </div>
-                </div>
             </div>
         ';
+//        return '
+//            <div class="stats">
+//                <div class="alert alert-dark" role="alert">
+//                    <span>' . $this->getCurrencyCode($this->getInstrument('quoteCurrency')) . '&nbsp; </span>
+//                    <span id="statsCurrentPrice" class="'
+//                        . $this->getPriceBackgroundColorHTML($this->prevLastPrice, $this->getLastPrice()) . '">'
+//                        . $this->getLastPrice() .  '
+//                    </span>
+//                </div>
+//
+//                <div class="card">
+//                    <div class="card-body">
+//                        <h6>Instrument info</h6>
+//                        ' . join('<br />', $instrument) . '
+//                    </div>
+//                </div>
+//            </div>
+//        ';
     }
 
     public function getCurrencyCode($currency) {

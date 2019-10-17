@@ -1,0 +1,1 @@
+sh ./btc && sh ./btc-zoom && sh ./eth
