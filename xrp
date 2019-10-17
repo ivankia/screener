@@ -6,4 +6,4 @@ php /screener/ethla orderbook:get --symbol=XRPZ19 \
     --s=5 --limit=50 \
     --l1=10000000000 --l2=20000000000 --l3=35000000000 \
     --schema=discrete_levels \
-    --floating=2
+    --floating=2 &

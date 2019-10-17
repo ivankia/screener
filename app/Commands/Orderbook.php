@@ -180,7 +180,7 @@ class Orderbook extends Command
 
         foreach ($data as $key => $val) {
             $order = [
-                'price' => $val['price'],
+                'price' => floatval($val['price']),
             ];
 
             $amount = $val['size'];
@@ -258,7 +258,7 @@ class Orderbook extends Command
      */
     protected function setLastPrice($price)
     {
-        $this->lastPrice = $price;
+        $this->lastPrice = $this->toFloat($price);
     }
 
     /**
@@ -353,7 +353,7 @@ class Orderbook extends Command
             $orderbookL = array_slice($orderbookL, 0, $params['limit']);
 
             usort($orderbookL, function($a, $b) {
-                return $b['price'] <=> $a['price'];
+                return $this->toFloat($b['price']) <=> $this->toFloat($a['price']);
             });
 
             array_multisort(array_column($orderbookR, 'size'), $params['sortR'], $orderbookR);
@@ -361,7 +361,7 @@ class Orderbook extends Command
             $orderbookR = array_slice($orderbookR, 0, $params['limit']);
 
             usort($orderbookR, function($a, $b) {
-                return $a['price'] <=> $b['price'];
+                return $this->toFloat($a['price']) <=> $this->toFloat($b['price']);
             });
 
             if ($this->getParam('schema') == 'quoter_average') {
@@ -430,7 +430,7 @@ class Orderbook extends Command
                     'Price',
                     '<span id="currentPrice" class="p-1 px-2 '
                         . $this->getPriceBackgroundColorHTML($this->prevLastPrice, $this->getLastPrice()) . '">'
-                        . $this->getLastPrice() .
+                        . $this->toFloat($this->getLastPrice()) .
                     '</span>',
                     'Price',
                     'Buy'
@@ -471,7 +471,7 @@ class Orderbook extends Command
                 
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
                 
-                <title>' . sprintf('%.8f', floatval($this->getLastPrice())) . '</title>
+                <title>' . $this->toFloat($this->getLastPrice()) . '</title>
                 
                 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
                 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -558,9 +558,9 @@ class Orderbook extends Command
         foreach ($orderbook as $key => $val) {
             $orderbook[$key] = [
                 'BUY_SIZE' => isset($bS[$key]) ? $bS[$key] : 0,
-                'BUY_PRICE' => isset($bP[$key]) ? $bP[$key] : 0,
+                'BUY_PRICE' => isset($bP[$key]) ? $this->toFloat($bP[$key]) : 0,
                 'DELIMITER' => '  ',
-                'SELL_PRICE' => isset($sP[$key]) ? $sP[$key] : 0,
+                'SELL_PRICE' => isset($sP[$key]) ? $this->toFloat($sP[$key]) : 0,
                 'SELL_SIZE' => isset($sS[$key]) ? $sS[$key] : 0,
             ];
         }
@@ -585,9 +585,9 @@ class Orderbook extends Command
         foreach ($orderbook as $key => $val) {
             $orderbook[$key] = [
                 'b_size'  => isset($bS[$key]) ? $bS[$key] : 0,
-                'b_price' => isset($bP[$key]) ? $bP[$key] : 0,
+                'b_price' => isset($bP[$key]) ? $this->toFloat($bP[$key]) : 0,
                 'empty'   => '',
-                's_price' => isset($sP[$key]) ? $sP[$key] : 0,
+                's_price' => isset($sP[$key]) ? $this->toFloat($sP[$key]) : 0,
                 's_size'  => isset($sS[$key]) ? $sS[$key] : 0,
             ];
         }
@@ -662,7 +662,7 @@ class Orderbook extends Command
 
         return [
             'size'   => $maxminS,
-            'price'  => $maxminP,
+            'price'  => $this->toFloat($maxminP),
             'avgp'   => $avgP,
             'avgs'   => $avgS,
             'q1avgs' => $q1AvgS,
@@ -723,44 +723,43 @@ class Orderbook extends Command
 
         foreach ($orderbook as $key => $val) {
             foreach ($levels as $levelCode => $level) {
-                $size = number_format(round($val['size']), 0, '.', ' ');
-//                $price = number_format($val['price'], $this->getParam('floating'), '.', ' ');
-//                $price = sprintf('%.8f',floatval($val['price']));
-		$price = floatval($val['price']);
+//                $size = number_format(round($val['size']), 2, '.', ',');
+                $size  = $this->formatNum($val['size']);
+		        $price = floatval($val['price']);
 
                 if ($param == 'size' && $val['size'] >= $level) {
                     if ($levelCode == 'low') {
-                        $orderbook[$key]['size'] = $this->h100($size);
+                        $orderbook[$key]['size']  = $this->h100($size);
                         $orderbook[$key]['price'] = $this->h101($price);
                     } elseif ($levelCode == 'mid') {
-                        $orderbook[$key]['size'] = $this->h200($size);
+                        $orderbook[$key]['size']  = $this->h200($size);
                         $orderbook[$key]['price'] = $this->h201($price);
                     } elseif ($levelCode == 'high') {
-                        $orderbook[$key]['size'] = $this->h300($size);
+                        $orderbook[$key]['size']  = $this->h300($size);
                         $orderbook[$key]['price'] = $this->h301($price);
                     } else {
                         $orderbook[$key]['size']  = $size;
-                        $orderbook[$key]['price']  = $price;
+                        $orderbook[$key]['price'] = $this->toFloat($price);
                     }
                 }
 
                 if ($param == 'price' && $val['price'] >= $level) {
                     if ($levelCode == 'low') {
                         $orderbook[$key]['price'] = $this->h100($price);
-                        $orderbook[$key]['size'] = $this->h101($size);
+                        $orderbook[$key]['size']  = $this->h101($size);
                     } elseif ($levelCode == 'mid') {
                         $orderbook[$key]['price'] = $this->h200($price);
-                        $orderbook[$key]['size'] = $this->h201($size);
+                        $orderbook[$key]['size']  = $this->h201($size);
                     } elseif ($levelCode == 'high') {
                         $orderbook[$key]['price'] = $this->h300($price);
-                        $orderbook[$key]['size'] = $this->h301($size);
+                        $orderbook[$key]['size']  = $this->h301($size);
                     } else {
                         $orderbook[$key]['size']  = $size;
-                        $orderbook[$key]['price']  = $price;
+                        $orderbook[$key]['price'] = $this->toFloat($price);
                     }
                 }
 
-                //$orderbook[$key]['price']  = sprintf("%.8f", floatval($orderbook[$key]['price']));
+                $orderbook[$key]['price'] = $this->toFloat($orderbook[$key]['price']);
             }
         }
 
@@ -799,8 +798,8 @@ class Orderbook extends Command
                     }
                 }
 
-                //$orderbook[$key]['price']  = sprintf("%.8f", floatval($orderbook[$key]['price']));	    
-	    }
+                $orderbook[$key]['price'] = $this->toFloat($orderbook[$key]['price']);
+	        }
         }
 
         return $orderbook;
@@ -897,9 +896,7 @@ class Orderbook extends Command
      */
     protected function high($string)
     {
-        $string = $this->toFloat($string);
-
-        return '<span class="align-middle bg-danger px-1">' . $string . '</span>';
+        return '<span class="align-middle bg-danger px-1">' . $this->toFloat($string) . '</span>';
     }
 
     /**
@@ -908,9 +905,7 @@ class Orderbook extends Command
      */
     protected function norm($string)
     {
-        $string = $this->toFloat($string);
-
-        return '<span class="align-middle bg-warning px-1">' . $string . '</span>';
+        return '<span class="align-middle bg-warning px-1">' . $this->toFloat($string) . '</span>';
     }
 
     /**
@@ -919,9 +914,15 @@ class Orderbook extends Command
      */
     protected function low($string)
     {
-        $string = $this->toFloat($string);
-
-        return '<span class="align-middle bg-secondary px-1">' . $string . '</span>';
+        return '<span class="align-middle bg-secondary px-1">' . $this->toFloat($string) . '</span>';
+    }
+    /**
+     * @param string $string
+     * @return string
+     */
+    protected function standard($string)
+    {
+        return '<span class="align-middle px-1">' . $this->toFloat($string) . '</span>';
     }
 
     /**
@@ -930,13 +931,11 @@ class Orderbook extends Command
      */
     protected function h1($string)
     {
-	$string = $this->toFloat($string);
-
         if ($this->getParam('display') == 'html') {
-            return '<span class="bg-danger">' . $string . '</span>';
+            return '<span class="bg-danger">' . $this->toFloat($string) . '</span>';
         }
 
-        return '<h1>' . $string . '</>';
+        return '<h1>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -945,13 +944,11 @@ class Orderbook extends Command
      */
     protected function h2($string)
     {
-        $string = $this->toFloat($string);
-
         if ($this->getParam('display') == 'html') {
-            return '<span class="bg-warning">' . $string . '</span>';
+            return '<span class="bg-warning">' . $this->toFloat($string) . '</span>';
         }
 
-        return '<h2>' . $string . '</>';
+        return '<h2>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -960,13 +957,11 @@ class Orderbook extends Command
      */
     protected function h3($string)
     {
-    	$string = $this->toFloat($string);
-
         if ($this->getParam('display') == 'html') {
-            return '<span class="bg-secondary">' . $string . '</span>';
+            return '<span class="bg-secondary">' . $this->toFloat($string) . '</span>';
         }
 
-        return '<h3>' . $string . '</>';
+        return '<h3>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -976,10 +971,10 @@ class Orderbook extends Command
     protected function h11($string)
     {
         if ($this->getParam('display') == 'html') {
-            return '<span class="text-danger px-2">' . $string . '</span>';
+            return '<span class="text-danger px-2">' . $this->toFloat($string) . '</span>';
         }
 
-        return '<h1>' . $string . '</>';
+        return '<h1>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -989,10 +984,10 @@ class Orderbook extends Command
     protected function h22($string)
     {
         if ($this->getParam('display') == 'html') {
-            return '<span class="text-warning px-2">' . $string . '</span>';
+            return '<span class="text-warning px-2">' . $this->toFloat($string) . '</span>';
         }
 
-        return '<h2>' . $string . '</>';
+        return '<h2>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -1002,10 +997,10 @@ class Orderbook extends Command
     protected function h33($string)
     {
         if ($this->getParam('display') == 'html') {
-            return '<span class="text-secondary px-2">' . $string . '</span>';
+            return '<span class="text-secondary px-2">' . $this->toFloat($string) . '</span>';
         }
 
-        return '<h3>' . $string . '</>';
+        return '<h3>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -1014,7 +1009,7 @@ class Orderbook extends Command
      */
     protected function h100($string)
     {
-        return '<h100>' . $string . '</>';
+        return '<h100>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -1032,7 +1027,7 @@ class Orderbook extends Command
      */
     protected function h200($string)
     {
-        return '<h200>' . $string . '</>';
+        return '<h200>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -1050,7 +1045,7 @@ class Orderbook extends Command
      */
     protected function h300($string)
     {
-        return '<h300>' . $string . '</>';
+        return '<h300>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -1064,11 +1059,26 @@ class Orderbook extends Command
 
     public function toFloat($input)
     {
-	if (is_numeric($input)) {
-    	    return sprintf("%.8f", floatval($input));
-	} else {
-	    return $input;
+	    if (is_float($input) || is_double($input)) {
+	        $input = rtrim(sprintf("%.8f", floatval($input)));
+
+	        if (floatval($input) >=1) {
+                return "" . $this->formatNum($input);
+            } else {
+	            return "" . $input;
+            }
+	    } else {
+	        return $input;
         }
+    }
+
+    public function formatNum($input, $decimalsCount = '2', $decimalPoint = '.', $thousandsSpeparator = ',')
+    {
+//        if (ceil($input) - $input == 0) {
+//            $decimalsCount = 0;
+//        }
+        
+        return number_format($input, $decimalsCount, $decimalPoint, $thousandsSpeparator);
     }
 
     public function getLegend($levels) {
@@ -1124,7 +1134,7 @@ class Orderbook extends Command
                     <span>' . $this->getCurrencyCode($this->getInstrument('quoteCurrency')) . '&nbsp; </span>
                     <span id="statsCurrentPrice" class="'
                         . $this->getPriceBackgroundColorHTML($this->prevLastPrice, $this->getLastPrice()) . '">'
-                        . $this->getLastPrice() .  '
+                        . $this->toFloat($this->getLastPrice()) .  '
                     </span>
                 </div>
             </div>

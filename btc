@@ -6,4 +6,4 @@ php /screener/ethla orderbook:get --symbol=XBTUSD \
     --s=50 --limit=50 \
     --l1=250 --l2=350 --l3=500 \
     --schema=discrete_levels \
-    --floating=2 &
+    --floating=2
