@@ -2,7 +2,7 @@
 php /screener/ethla orderbook:get --symbol=ETHUSD \
     --f=ethusd_zoom \
     --pf=140 \
-    --pt=200 \
+    --pt=220 \
     --s=1 --limit=30 \
     --l1=1500 --l2=1750 --l3=2000 \
     --schema=discrete_levels \

@@ -471,7 +471,7 @@ class Orderbook extends Command
                 
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
                 
-                <title>' . $this->getLastPrice() . '</title>
+                <title>' . sprintf('%.8f', floatval($this->getLastPrice())) . '</title>
                 
                 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
                 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -724,7 +724,9 @@ class Orderbook extends Command
         foreach ($orderbook as $key => $val) {
             foreach ($levels as $levelCode => $level) {
                 $size = number_format(round($val['size']), 0, '.', ' ');
-                $price = number_format($val['price'], $this->getParam('floating'), '.', ' ');
+//                $price = number_format($val['price'], $this->getParam('floating'), '.', ' ');
+//                $price = sprintf('%.8f',floatval($val['price']));
+		$price = floatval($val['price']);
 
                 if ($param == 'size' && $val['size'] >= $level) {
                     if ($levelCode == 'low') {
@@ -757,6 +759,8 @@ class Orderbook extends Command
                         $orderbook[$key]['price']  = $price;
                     }
                 }
+
+                //$orderbook[$key]['price']  = sprintf("%.8f", floatval($orderbook[$key]['price']));
             }
         }
 
@@ -794,7 +798,9 @@ class Orderbook extends Command
                         $orderbook[$key]['size'] = $this->low($val['size']);
                     }
                 }
-            }
+
+                //$orderbook[$key]['price']  = sprintf("%.8f", floatval($orderbook[$key]['price']));	    
+	    }
         }
 
         return $orderbook;
@@ -891,6 +897,8 @@ class Orderbook extends Command
      */
     protected function high($string)
     {
+        $string = $this->toFloat($string);
+
         return '<span class="align-middle bg-danger px-1">' . $string . '</span>';
     }
 
@@ -900,6 +908,8 @@ class Orderbook extends Command
      */
     protected function norm($string)
     {
+        $string = $this->toFloat($string);
+
         return '<span class="align-middle bg-warning px-1">' . $string . '</span>';
     }
 
@@ -909,6 +919,8 @@ class Orderbook extends Command
      */
     protected function low($string)
     {
+        $string = $this->toFloat($string);
+
         return '<span class="align-middle bg-secondary px-1">' . $string . '</span>';
     }
 
@@ -918,6 +930,8 @@ class Orderbook extends Command
      */
     protected function h1($string)
     {
+	$string = $this->toFloat($string);
+
         if ($this->getParam('display') == 'html') {
             return '<span class="bg-danger">' . $string . '</span>';
         }
@@ -931,6 +945,8 @@ class Orderbook extends Command
      */
     protected function h2($string)
     {
+        $string = $this->toFloat($string);
+
         if ($this->getParam('display') == 'html') {
             return '<span class="bg-warning">' . $string . '</span>';
         }
@@ -944,6 +960,8 @@ class Orderbook extends Command
      */
     protected function h3($string)
     {
+    	$string = $this->toFloat($string);
+
         if ($this->getParam('display') == 'html') {
             return '<span class="bg-secondary">' . $string . '</span>';
         }
@@ -1005,7 +1023,7 @@ class Orderbook extends Command
      */
     protected function h101($string)
     {
-        return '<h101>' . $string . '</>';
+        return '<h101>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -1023,7 +1041,7 @@ class Orderbook extends Command
      */
     protected function h201($string)
     {
-        return '<h201>' . $string . '</>';
+        return '<h201>' . $this->toFloat($string) . '</>';
     }
 
     /**
@@ -1041,7 +1059,16 @@ class Orderbook extends Command
      */
     protected function h301($string)
     {
-        return '<h301>' . $string . '</>';
+        return '<h301>' . $this->toFloat($string) . '</>';
+    }
+
+    public function toFloat($input)
+    {
+	if (is_numeric($input)) {
+    	    return sprintf("%.8f", floatval($input));
+	} else {
+	    return $input;
+        }
     }
 
     public function getLegend($levels) {
