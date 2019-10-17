@@ -1077,7 +1077,7 @@ class Orderbook extends Command
 //        if (ceil($input) - $input == 0) {
 //            $decimalsCount = 0;
 //        }
-        
+
         return number_format($input, $decimalsCount, $decimalPoint, $thousandsSpeparator);
     }
 
