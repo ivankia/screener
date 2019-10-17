@@ -180,19 +180,19 @@ class Orderbook extends Command
 
         foreach ($data as $key => $val) {
             $order = [
-                'price' => $val[0]['price'],
+                'price' => $val['price'],
             ];
 
-            $amount = $val[0]['size'];
+            $amount = $val['size'];
             $size   = $amount / $order['price'];
 
             if ($order['price'] > $this->getParam('price_limits')[0]
                 && $order['price'] < $this->getParam('price_limits')[1]
                 && $size >= $this->getParam('min_size')
             ) {
-                $order['size']  = round($val[0]['size'] / $order['price'], 1);
+                $order['size']  = round($val['size'] / $order['price'], 1);
 
-                if ($val[0]['side'] == 'Buy') {
+                if ($val['side'] == 'Buy') {
                     $buys[] = $order;
                 } else {
                     $sells[] = $order;
@@ -283,7 +283,8 @@ class Orderbook extends Command
     {
         $data = json_decode(file_get_contents($this->getParam('bitmex')['api_url_instrument'] . $symbol), JSON_OBJECT_AS_ARRAY, 2147483646);
 
-        $this->instrument = $data[0][0];
+//        $this->instrument = $data[0][0];
+        $this->instrument = $data[0];
         $this->symbol = $symbol;
     }
 
@@ -465,7 +466,7 @@ class Orderbook extends Command
         $out = '
         <!doctype html><html lang="en">
             <head>
-                <meta http-equiv="refresh" content="' . $refresh . ';url=http://delta.huemae.ru/' . strtolower($this->filename) . '.html" />
+                <meta http-equiv="refresh" content="' . $refresh . ';url=http://dev.huemae.ru/' . strtolower($this->filename) . '.html" />
                 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
                 
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">

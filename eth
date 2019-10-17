@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-php /root/ethla/ethla orderbook:get --symbol=ETHUSD \
+php /screener/ethla orderbook:get --symbol=ETHUSD \
     --f=ethusd \
     --pf=100 \
     --pt=300 \
     --s=5 --limit=50 \
     --l1=1000 --l2=2000 --l3=4000 \
     --schema=discrete_levels \
-    --floating=2
+    --floating=2 &

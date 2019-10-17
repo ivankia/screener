@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-php /root/ethla/ethla orderbook:get --symbol=XBTUSD \
+php /screener/ethla orderbook:get --symbol=XBTUSD \
     --f=xbtusd \
     --pf=500 \
     --pt=20000 \

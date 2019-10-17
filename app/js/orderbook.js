@@ -3,7 +3,7 @@ $(document).ready(function() {
         $("#spinner").show();
 
         $.ajax({
-            url: "http://delta.huemae.ru/{{file_cache}}.html",
+            url: "http://dev.huemae.ru/{{file_cache}}.html",
             cache: false
         }).done(function(html) {
             $("#mainFrame table").html(html);

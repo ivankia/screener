@@ -11,7 +11,7 @@ return [
         App\Providers\AppServiceProvider::class,
     ],
 
-    'html_path'  => '/root/ethla/app/html',
+    'html_path'  => '/screener/app/html',
 
     'orderbook_params' => [
             'column'       => 'size_price', // default column
@@ -30,7 +30,7 @@ return [
             'exchange'     => 'bitmex',
 
             'bitmex' => [
-                'host' => 'http://localhost',
+                'host' => 'http://dev.huemae.ru',
                 'port' => 4444,
 
                 'pt_orderbook'  => 'orderBookL2?symbol={symbol}&depth={depth}',
@@ -38,8 +38,8 @@ return [
                 'symbol'        => 'ETHUSD',
                 'depth'         => 0,
 
-                'api_url'            => 'http://localhost:4444/orderBookL2?symbol={symbol}&depth={depth}',
-                'api_url_instrument' => 'http://localhost:4444/instrument?symbol=',
+                'api_url'            => 'http://dev.huemae.ru:4444/orderBookL2?symbol={symbol}&depth={depth}',
+                'api_url_instrument' => 'http://dev.huemae.ru:4444/instrument?symbol=',
             ],
 
             'schema'       => 'discrete_levels', // 'quoter_average',
