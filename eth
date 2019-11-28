@@ -6,4 +6,5 @@ php /screener/ethla orderbook:get --symbol=ETHUSD \
     --s=5 --limit=50 \
     --l1=1000 --l2=1500 --l3=2500 \
     --schema=discrete_levels \
-    --floating=2 &
+    --floating=2
+exit 1

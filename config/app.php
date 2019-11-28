@@ -18,7 +18,7 @@ return [
             'sortL'        => SORT_DESC,
             'sortR'        => SORT_DESC,
             'headers'      => ['Buy', 'Price', '  ', 'Price', 'Sell'], // table heads
-            'price_limits' => [50, 300],
+            'price_limits' => ['auto', 'auto'],
             'min_size'     => 1,
             'limit'        => 50,
             'floating'     => 12,
@@ -42,11 +42,11 @@ return [
                 'api_url_instrument' => 'http://dev.huemae.ru:4444/instrument?symbol=',
             ],
 
-            'schema'       => 'discrete_levels', // 'quoter_average',
+            'schema'          => 'discrete_levels', // 'quoter_average',
             'discrete_levels' => [
-                'low'  => 10,
-                'mid'  => 50,
-                'high' => 100
+                'low'  => 100,
+                'mid'  => 200,
+                'high' => 300,
             ],
     ],
 ];

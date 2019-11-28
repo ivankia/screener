@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 php /screener/ethla orderbook:get --symbol=XBTUSD \
     --f=xbtusd \
-    --pf=500 \
-    --pt=20000 \
-    --s=50 --limit=50 \
-    --l1=250 --l2=350 --l3=500 \
+    --pf=5000 \
+    --pt=25000 \
+    --s=5 --limit=50 \
+    --l1=200 --l2=300 --l3=500 \
     --schema=discrete_levels \
     --floating=2
+exit 1

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+php /screener/ethla orderbook:get --symbol=TRXZ19 \
+    --f=trxbtc \
+    --pf=0.000001 \
+    --pt=1 \
+    --s=25 --limit=50 \
+    --l1=4000000000000 --l2=7000000000000 --l3=10000000000000 \
+    --schema=discrete_levels \
+    --floating=5
+exit 1

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+php /screener/ethla orderbook:get --symbol=XBTZ19 \
+    --f=xbtusd-3m \
+    --pf=500 \
+    --pt=20000 \
+    --s=5 --limit=50 \
+    --l1=25 --l2=50 --l3=100 \
+    --schema=discrete_levels \
+    --floating=2
+exit 1

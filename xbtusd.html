@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="refresh" content="180;url=http://dev.huemae.ru/xbtusd.html"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>7,940.50</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setInterval(function () {
+                $("#spinner").show();
+
+                $.ajax({
+                    url: "http://dev.huemae.ru/xbtusd_cache.html",
+                    cache: false
+                }).done(function (html) {
+                    $("#mainFrame table").html(html);
+                    $("#statsCurrentPrice").html($("#currentPrice").html());
+                    $("title").text($("#currentPrice").html());
+
+                    $(".inf").forEach(function (el) {
+                        var ids = $(this).attr("data-content");
+                        var idsList = ids.match(/(\d+)|(\d+)/);
+
+                        var id1 = idsList[0];
+                        var id2 = idsList[1];
+
+                        $(this).parent().prev().prev().attr("alt", id1);
+                        $(this).parent().next().next().attr("alt", id2);
+                    });
+                });
+
+                $("#spinner").hide();
+            }, 3000);
+        });
+    </script>
+
+    <style>body {
+        background-color: darkslategray;
+        font-size: 0.65em;
+        font-weight: bolder;
+        padding: 10px;
+    }
+
+    table {
+        background-color: slategray;
+    }
+
+    th {
+        font-size: 0.8em;
+    }
+
+    th span {
+        width: 100px;
+    }
+
+    tr {
+        text-align: center;
+    }
+
+    td {
+        min-width: 75px;
+        padding: 0 !important;
+        border: 0 !important;
+    }
+
+    td span {
+        width: 100%;
+        display: inline-block;
+    }
+
+    .legend, .stats {
+        font-size: 20px;
+    }
+
+    .stats .card {
+        font-size: 10px;
+        font-weight: normal;
+    }
+
+    #spinner {
+        display: none;
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        vertical-align: center;
+    }
+
+    #instrument_info {
+        display: none;
+    }</style>
+</head>
+<body>
+<div class="spinner-border text-secondary" id="spinner" role="status">
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12" id="mainFrame">
+            <table class="table table-sm .table-striped">
+                <thead class="thead-light">
+                <tr class="align-middle">
+                    <th scope="col">Buy</th>
+                    <th scope="col">Price</th>
+                    <th scope="col"><span id="currentPrice" class="p-1 px-2 XBTUSD: table-danger">7,940.50</span></th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Buy</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">320.30</span></td>
+                    <td><span class="align-middle bg-secondary px-1">7,855.50</span></td>
+                    <td>
+                        <div class="inf" data-content="8799214450|8799205900"></div>
+                    </td>
+                    <td>7,941.00</td>
+                    <td>146.2</td>
+                </tr>
+                <tr>
+                    <td>225.2</td>
+                    <td>7,852.00</td>
+                    <td>
+                        <div class="inf" data-content="8799214800|8799205000"></div>
+                    </td>
+                    <td><span class="align-middle bg-secondary px-1">7,950.00</span></td>
+                    <td><span class="align-middle bg-secondary px-1">270.30</span></td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">267.70</span></td>
+                    <td><span class="align-middle bg-secondary px-1">7,850.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799215000|8799204300"></div>
+                    </td>
+                    <td>7,957.00</td>
+                    <td>157.4</td>
+                </tr>
+                <tr>
+                    <td>164.5</td>
+                    <td>7,790.00</td>
+                    <td>
+                        <div class="inf" data-content="8799221000|8799204000"></div>
+                    </td>
+                    <td>7,960.00</td>
+                    <td>115.7</td>
+                </tr>
+                <tr>
+                    <td>193.1</td>
+                    <td>7,789.50</td>
+                    <td>
+                        <div class="inf" data-content="8799221050|8799202300"></div>
+                    </td>
+                    <td>7,977.00</td>
+                    <td>103.3</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-warning px-1">355.00</span></td>
+                    <td><span class="align-middle bg-warning px-1">7,770.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799223000|8799202000"></div>
+                    </td>
+                    <td>7,980.00</td>
+                    <td>169</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-warning px-1">430.80</span></td>
+                    <td><span class="align-middle bg-warning px-1">7,750.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799225000|8799201000"></div>
+                    </td>
+                    <td>7,990.00</td>
+                    <td>188.7</td>
+                </tr>
+                <tr>
+                    <td>227.6</td>
+                    <td>7,744.00</td>
+                    <td>
+                        <div class="inf" data-content="8799225600|8799200000"></div>
+                    </td>
+                    <td><span class="align-middle bg-warning px-1">8,000.00</span></td>
+                    <td><span class="align-middle bg-warning px-1">456.20</span></td>
+                </tr>
+                <tr>
+                    <td>164.3</td>
+                    <td>7,690.00</td>
+                    <td>
+                        <div class="inf" data-content="8799231000|8799199250"></div>
+                    </td>
+                    <td>8,007.50</td>
+                    <td>128.3</td>
+                </tr>
+                <tr>
+                    <td>171.9</td>
+                    <td>7,680.00</td>
+                    <td>
+                        <div class="inf" data-content="8799232000|8799199000"></div>
+                    </td>
+                    <td>8,010.00</td>
+                    <td>138</td>
+                </tr>
+                <tr>
+                    <td>211.2</td>
+                    <td>7,603.00</td>
+                    <td>
+                        <div class="inf" data-content="8799239700|8799198800"></div>
+                    </td>
+                    <td>8,012.00</td>
+                    <td>97.3</td>
+                </tr>
+                <tr>
+                    <td>227.8</td>
+                    <td>7,560.00</td>
+                    <td>
+                        <div class="inf" data-content="8799244000|8799198200"></div>
+                    </td>
+                    <td>8,018.00</td>
+                    <td>96.2</td>
+                </tr>
+                <tr>
+                    <td>217.2</td>
+                    <td>7,500.00</td>
+                    <td>
+                        <div class="inf" data-content="8799250000|8799198000"></div>
+                    </td>
+                    <td>8,020.00</td>
+                    <td>137.3</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-warning px-1">375.30</span></td>
+                    <td><span class="align-middle bg-warning px-1">7,466.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799253400|8799196700"></div>
+                    </td>
+                    <td>8,033.00</td>
+                    <td>176.8</td>
+                </tr>
+                <tr>
+                    <td>172.5</td>
+                    <td>7,421.00</td>
+                    <td>
+                        <div class="inf" data-content="8799257900|8799196300"></div>
+                    </td>
+                    <td>8,037.00</td>
+                    <td>110.1</td>
+                </tr>
+                <tr>
+                    <td>172.8</td>
+                    <td>7,400.00</td>
+                    <td>
+                        <div class="inf" data-content="8799260000|8799196000"></div>
+                    </td>
+                    <td>8,040.00</td>
+                    <td>111.3</td>
+                </tr>
+                <tr>
+                    <td>173.6</td>
+                    <td>7,367.00</td>
+                    <td>
+                        <div class="inf" data-content="8799263300|8799195000"></div>
+                    </td>
+                    <td><span class="align-middle bg-secondary px-1">8,050.00</span></td>
+                    <td><span class="align-middle bg-secondary px-1">273.30</span></td>
+                </tr>
+                <tr>
+                    <td>214.3</td>
+                    <td>7,350.00</td>
+                    <td>
+                        <div class="inf" data-content="8799265000|8799190700"></div>
+                    </td>
+                    <td>8,093.00</td>
+                    <td>102.3</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-warning px-1">418.20</span></td>
+                    <td><span class="align-middle bg-warning px-1">7,301.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799269900|8799190000"></div>
+                    </td>
+                    <td>8,100.00</td>
+                    <td>146.8</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">270.40</span></td>
+                    <td><span class="align-middle bg-secondary px-1">7,300.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799270000|8799188000"></div>
+                    </td>
+                    <td>8,120.00</td>
+                    <td>109.9</td>
+                </tr>
+                <tr>
+                    <td>213.5</td>
+                    <td>7,280.00</td>
+                    <td>
+                        <div class="inf" data-content="8799272000|8799186000"></div>
+                    </td>
+                    <td>8,140.00</td>
+                    <td>98.5</td>
+                </tr>
+                <tr>
+                    <td>198.3</td>
+                    <td>7,260.00</td>
+                    <td>
+                        <div class="inf" data-content="8799274000|8799185000"></div>
+                    </td>
+                    <td>8,150.00</td>
+                    <td>134.2</td>
+                </tr>
+                <tr>
+                    <td>176.7</td>
+                    <td>7,230.00</td>
+                    <td>
+                        <div class="inf" data-content="8799277000|8799183100"></div>
+                    </td>
+                    <td>8,169.00</td>
+                    <td>91.5</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-danger px-1">703.40</span></td>
+                    <td><span class="align-middle bg-danger px-1">7,200.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799280000|8799182500"></div>
+                    </td>
+                    <td>8,175.00</td>
+                    <td>90.6</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">279.90</span></td>
+                    <td><span class="align-middle bg-secondary px-1">7,154.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799284600|8799180000"></div>
+                    </td>
+                    <td><span class="align-middle bg-danger px-1">8,200.00</span></td>
+                    <td><span class="align-middle bg-danger px-1">536.20</span></td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-warning px-1">366.90</span></td>
+                    <td><span class="align-middle bg-warning px-1">7,150.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799285000|8799176000"></div>
+                    </td>
+                    <td>8,240.00</td>
+                    <td>119.4</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">286.40</span></td>
+                    <td><span class="align-middle bg-secondary px-1">7,123.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799287700|8799175000"></div>
+                    </td>
+                    <td>8,250.00</td>
+                    <td>118.7</td>
+                </tr>
+                <tr>
+                    <td>197.3</td>
+                    <td>7,111.00</td>
+                    <td>
+                        <div class="inf" data-content="8799288900|8799170000"></div>
+                    </td>
+                    <td>8,300.00</td>
+                    <td>156.4</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-danger px-1">1,408.80</span></td>
+                    <td><span class="align-middle bg-danger px-1">7,103.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799289700|8799166700"></div>
+                    </td>
+                    <td><span class="align-middle bg-warning px-1">8,333.00</span></td>
+                    <td><span class="align-middle bg-warning px-1">374.70</span></td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-danger px-1">861.10</span></td>
+                    <td><span class="align-middle bg-danger px-1">7,101.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799289900|8799166000"></div>
+                    </td>
+                    <td>8,340.00</td>
+                    <td>99.3</td>
+                </tr>
+                <tr>
+                    <td>214.8</td>
+                    <td>7,100.00</td>
+                    <td>
+                        <div class="inf" data-content="8799290000|8799165000"></div>
+                    </td>
+                    <td>8,350.00</td>
+                    <td>92.3</td>
+                </tr>
+                <tr>
+                    <td>180.8</td>
+                    <td>7,000.00</td>
+                    <td>
+                        <div class="inf" data-content="8799300000|8799160000"></div>
+                    </td>
+                    <td>8,400.00</td>
+                    <td>152.9</td>
+                </tr>
+                <tr>
+                    <td>176.8</td>
+                    <td>6,786.50</td>
+                    <td>
+                        <div class="inf" data-content="8799321350|8799152000"></div>
+                    </td>
+                    <td><span class="align-middle bg-secondary px-1">8,480.00</span></td>
+                    <td><span class="align-middle bg-secondary px-1">349.30</span></td>
+                </tr>
+                <tr>
+                    <td>187.4</td>
+                    <td>6,700.00</td>
+                    <td>
+                        <div class="inf" data-content="8799330000|8799150000"></div>
+                    </td>
+                    <td><span class="align-middle bg-warning px-1">8,500.00</span></td>
+                    <td><span class="align-middle bg-warning px-1">474.90</span></td>
+                </tr>
+                <tr>
+                    <td>202.4</td>
+                    <td>6,275.00</td>
+                    <td>
+                        <div class="inf" data-content="8799372500|8799140000"></div>
+                    </td>
+                    <td>8,600.00</td>
+                    <td>208.6</td>
+                </tr>
+                <tr>
+                    <td>240.2</td>
+                    <td>6,250.50</td>
+                    <td>
+                        <div class="inf" data-content="8799374950|8799125000"></div>
+                    </td>
+                    <td>8,750.00</td>
+                    <td>113.9</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-warning px-1">369.70</span></td>
+                    <td><span class="align-middle bg-warning px-1">6,200.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799380000|8799121950"></div>
+                    </td>
+                    <td>8,780.50</td>
+                    <td>114.1</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">280.30</span></td>
+                    <td><span class="align-middle bg-secondary px-1">6,150.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799385000|8799121900"></div>
+                    </td>
+                    <td>8,781.00</td>
+                    <td>119.6</td>
+                </tr>
+                <tr>
+                    <td>245.4</td>
+                    <td>6,125.00</td>
+                    <td>
+                        <div class="inf" data-content="8799387500|8799121350"></div>
+                    </td>
+                    <td>8,786.50</td>
+                    <td>120.9</td>
+                </tr>
+                <tr>
+                    <td>245.9</td>
+                    <td>6,100.50</td>
+                    <td>
+                        <div class="inf" data-content="8799389950|8799121200"></div>
+                    </td>
+                    <td>8,788.00</td>
+                    <td>120.5</td>
+                </tr>
+                <tr>
+                    <td>247.4</td>
+                    <td>6,075.00</td>
+                    <td>
+                        <div class="inf" data-content="8799392500|8799121100"></div>
+                    </td>
+                    <td>8,789.00</td>
+                    <td>116.6</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">291.70</span></td>
+                    <td><span class="align-middle bg-secondary px-1">6,050.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799395000|8799121000"></div>
+                    </td>
+                    <td>8,790.00</td>
+                    <td>120.1</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">250.00</span></td>
+                    <td><span class="align-middle bg-secondary px-1">6,025.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799397500|8799120000"></div>
+                    </td>
+                    <td>8,800.00</td>
+                    <td>90.1</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">274.40</span></td>
+                    <td><span class="align-middle bg-secondary px-1">6,001.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799399900|8799110000"></div>
+                    </td>
+                    <td>8,900.00</td>
+                    <td>175.5</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-danger px-1">668.60</span></td>
+                    <td><span class="align-middle bg-danger px-1">6,000.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799400000|8799099900"></div>
+                    </td>
+                    <td><span class="align-middle bg-warning px-1">9,001.00</span></td>
+                    <td><span class="align-middle bg-warning px-1">442.00</span></td>
+                </tr>
+                <tr>
+                    <td>170.6</td>
+                    <td>4,500.00</td>
+                    <td>
+                        <div class="inf" data-content="8799550000|8799096600"></div>
+                    </td>
+                    <td><span class="align-middle bg-danger px-1">9,034.00</span></td>
+                    <td><span class="align-middle bg-danger px-1">562.70</span></td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-warning px-1">400.80</span></td>
+                    <td><span class="align-middle bg-warning px-1">3,996.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799600400|8799092000"></div>
+                    </td>
+                    <td><span class="align-middle bg-warning px-1">9,080.00</span></td>
+                    <td><span class="align-middle bg-warning px-1">444.40</span></td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-secondary px-1">288.00</span></td>
+                    <td><span class="align-middle bg-secondary px-1">1,999.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799800100|8798870000"></div>
+                    </td>
+                    <td>11,300.00</td>
+                    <td>133.5</td>
+                </tr>
+                <tr>
+                    <td><span class="align-middle bg-warning px-1">364.30</span></td>
+                    <td><span class="align-middle bg-warning px-1">1,100.00</span></td>
+                    <td>
+                        <div class="inf" data-content="8799890000|8798837000"></div>
+                    </td>
+                    <td>11,630.00</td>
+                    <td>215.3</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+        

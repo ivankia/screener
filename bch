@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+php /screener/ethla orderbook:get --symbol=BCHZ19 \
+    --f=bchbtc_zoom \
+    --pf=0.0001 \
+    --pt=1 \
+    --s=5 --limit=50 \
+    --l1=5000 --l2=15000 --l3=25000 \
+    --schema=discrete_levels \
+    --floating=2
+exit 1

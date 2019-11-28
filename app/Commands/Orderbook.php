@@ -104,7 +104,12 @@ class Orderbook extends Command
         while ($looping) {
             $timeStart = microtime(true);
 
-            $this->loadInstrument($this->getParam('symbol'));
+            $resp = false;
+
+            while (!$resp) {
+                $resp = $this->loadInstrument($this->getParam('symbol'));
+            }
+
             $this->observe();
             $looping--;
 
@@ -181,10 +186,32 @@ class Orderbook extends Command
         foreach ($data as $key => $val) {
             $order = [
                 'price' => floatval($val['price']),
+                'id'    => $val['id']
             ];
 
             $amount = $val['size'];
             $size   = $amount / $order['price'];
+
+            // AUTO Modes
+            if (isset($this->getParam('price_limits')[0]) && $this->getParam('price_limits')[0] == 'auto') {
+				$this->setParam('price_limits')[0] = $this->lastPrice - 200;
+			}
+
+            if (isset($this->getParam('price_limits')[1]) && $this->getParam('price_limits')[1] == 'auto') {
+				$this->setParam('price_limits')[1] = $this->lastPrice + 200;
+			}
+
+//			$levels = $this->getParam('discrete_levels');
+//
+//			if ($levels['l1'] == 'auto' || $levels['l2'] == 'auto' || $levels['l3'] == 'auto') {
+//				$this->setParam(
+//					'discrete_levels', [
+//						'low'  => 10,
+//						'mid'  => 50,
+//						'high' => 100
+//				]);
+//			}
+			//
 
             if ($order['price'] > $this->getParam('price_limits')[0]
                 && $order['price'] < $this->getParam('price_limits')[1]
@@ -281,50 +308,25 @@ class Orderbook extends Command
 
     protected function loadInstrument($symbol = 'ETHUSD')
     {
+//        $data = json_decode(file_get_contents($this->getParam('bitmex')['api_url_instrument'] . $symbol), JSON_OBJECT_AS_ARRAY, 2147483646);
+
+        $ctx = stream_context_create([
+           'http' => ['timeout' => 30]
+        ]);
+
+        $contents = file_get_contents($this->getParam('bitmex')['api_url_instrument'] . $symbol, false, $ctx);
+
+        if ($contents === false) {
+            return false;
+        }
+
         $data = json_decode(file_get_contents($this->getParam('bitmex')['api_url_instrument'] . $symbol), JSON_OBJECT_AS_ARRAY, 2147483646);
 
 //        $this->instrument = $data[0][0];
         $this->instrument = $data[0];
         $this->symbol = $symbol;
-    }
 
-    /**
-     * @param array $orderbook
-     * @param string $param
-     * @param int $limit
-     * @param int $sort
-     * @param array $headers
-     * @return void
-     */
-    protected function reportHr($orderbook, $param = 'size', $limit = 30, $sort = SORT_DESC, $headers = ['Price', 'Size'])
-    {
-        $limit--;
-
-        if ($param == 'size' || $param == 'price') {
-            array_multisort(array_column($orderbook, $param), $sort, $orderbook);
-        }
-
-        if ($param == 'size_price') {
-            array_multisort(array_column($orderbook, 'size'), $sort, $orderbook);
-
-            $orderbook = array_slice($orderbook, 0, $limit);
-
-            usort($orderbook, function($a, $b) {
-                return $b['price'] <=> $a['price'];
-            });
-        }
-
-        if ($param == 'price_size') {
-            array_multisort(array_column($orderbook, 'price'), $sort, $orderbook);
-
-            $orderbook = array_slice($orderbook, 0, $limit);
-
-            usort($orderbook, function($a, $b) {
-                return $b['size'] <=> $a['size'];
-            });
-        }
-
-        $this->table($headers, array_slice($orderbook, 0, $limit));
+        return true;
     }
 
     /**
@@ -353,7 +355,7 @@ class Orderbook extends Command
             $orderbookL = array_slice($orderbookL, 0, $params['limit']);
 
             usort($orderbookL, function($a, $b) {
-                return $this->toFloat($b['price']) <=> $this->toFloat($a['price']);
+                return $b['price'] <=> $a['price'];
             });
 
             array_multisort(array_column($orderbookR, 'size'), $params['sortR'], $orderbookR);
@@ -361,7 +363,7 @@ class Orderbook extends Command
             $orderbookR = array_slice($orderbookR, 0, $params['limit']);
 
             usort($orderbookR, function($a, $b) {
-                return $this->toFloat($a['price']) <=> $this->toFloat($b['price']);
+                return $a['price'] <=> $b['price'];
             });
 
             if ($this->getParam('schema') == 'quoter_average') {
@@ -429,6 +431,7 @@ class Orderbook extends Command
                     'Buy',
                     'Price',
                     '<span id="currentPrice" class="p-1 px-2 '
+                        . $this->symbol . ': '
                         . $this->getPriceBackgroundColorHTML($this->prevLastPrice, $this->getLastPrice()) . '">'
                         . $this->toFloat($this->getLastPrice()) .
                     '</span>',
@@ -439,19 +442,19 @@ class Orderbook extends Command
             )
         );
 
-	if ($this->consoleOut) {
-	    system('clear');
-    
+        if ($this->consoleOut) {
+            system('clear');
+
             $notifications = $this->popNotification();
 
             if (count($notifications)) {
                 foreach ($notifications as $notification) {
                     $this->getOutput()->section($notification);
-    	    }
-	    }
-    
+                }
+            }
+
             $this->table($this->getParam('headers'), $orderbook);
-	}
+        }
     }
 
     /**
@@ -553,15 +556,20 @@ class Orderbook extends Command
         $bS = array_column($b, 'size');
         $sS = array_column($s, 'size');
 
+        $bID = array_column($b, 'id');
+        $sID = array_column($s, 'id');
+
         $orderbook = array_keys($bP);
 
         foreach ($orderbook as $key => $val) {
             $orderbook[$key] = [
-                'BUY_SIZE' => isset($bS[$key]) ? $bS[$key] : 0,
-                'BUY_PRICE' => isset($bP[$key]) ? $this->toFloat($bP[$key]) : 0,
-                'DELIMITER' => '  ',
+//                'BID'        => $bID,
+                'BUY_SIZE'   => isset($bS[$key]) ? $bS[$key] : 0,
+                'BUY_PRICE'  => isset($bP[$key]) ? $this->toFloat($bP[$key]) : 0,
+                'DELIMITER'  => '  ',
                 'SELL_PRICE' => isset($sP[$key]) ? $this->toFloat($sP[$key]) : 0,
-                'SELL_SIZE' => isset($sS[$key]) ? $sS[$key] : 0,
+                'SELL_SIZE'  => isset($sS[$key]) ? $sS[$key] : 0,
+//                'SID'        => $sID,
             ];
         }
 
@@ -580,13 +588,16 @@ class Orderbook extends Command
         $bS = array_column($b, 'size');
         $sS = array_column($s, 'size');
 
+        $bID = array_column($b, 'id');
+        $sID = array_column($s, 'id');
+
         $orderbook = array_keys($bP);
 
         foreach ($orderbook as $key => $val) {
             $orderbook[$key] = [
                 'b_size'  => isset($bS[$key]) ? $bS[$key] : 0,
                 'b_price' => isset($bP[$key]) ? $this->toFloat($bP[$key]) : 0,
-                'empty'   => '',
+                'empty'   => '<div class="inf" data-content="' . $bID[$key] . '|' . $sID[$key] . '"></div>',
                 's_price' => isset($sP[$key]) ? $this->toFloat($sP[$key]) : 0,
                 's_size'  => isset($sS[$key]) ? $sS[$key] : 0,
             ];
@@ -721,11 +732,18 @@ class Orderbook extends Command
     {
         $levels = $this->getParam('discrete_levels');
 
+        $levelsAll = [
+			'low'  => [],
+			'mid'  => [],
+			'high' => [],
+		];
+
         foreach ($orderbook as $key => $val) {
             foreach ($levels as $levelCode => $level) {
-//                $size = number_format(round($val['size']), 2, '.', ',');
-                $size  = $this->formatNum($val['size']);
-		        $price = floatval($val['price']);
+				$size  = $this->formatNum($val['size']);
+	        	$price = floatval($val['price']);
+
+	        	$levelsAll[$levelCode][] = $price;
 
                 if ($param == 'size' && $val['size'] >= $level) {
                     if ($levelCode == 'low') {
@@ -761,10 +779,21 @@ class Orderbook extends Command
 
                 $orderbook[$key]['price'] = $this->toFloat($orderbook[$key]['price']);
             }
+
+			$levelsAll[$levelCode] = array_unique($levelsAll[$levelCode]);
         }
+
+        // save current levels
+		$this->pushActualLevels($levelsAll);
 
         return $orderbook;
     }
+
+    protected function pushActualLevels($levels)
+    {
+		$data = json_encode($levels);
+		file_put_contents('/var/www/html/' . strtolower($this->filename) . '_actual-levels.json', $data);
+	}
 
     protected function colorFillDiscreteLevelsHTML($orderbook, $param)
     {
