@@ -15,7 +15,7 @@ class Orderbook extends Command
      *
      * @var string
      */
-    protected $signature = 'orderbook:get {--symbol=ETHUSD} {--f=xbtusd.html} {--pf=50} {--pt=300} {--s=500} {--limit=50} {--schema=discrete_levels} {--l1=1000} {--l2=2000} {--l3=3000} {--floating=12} {--console=0}';
+    protected $signature = 'orderbook:get {--symbol=ETHUSD} {--f=xbtusd.html} {--pf=50} {--pt=30000} {--s=5} {--limit=50} {--schema=discrete_levels} {--l1=1000} {--l2=2000} {--l3=3000} {--floating=12} {--console=0}';
 
     /**
      * The description of the command.
@@ -194,24 +194,9 @@ class Orderbook extends Command
 
             // AUTO Modes
             if (isset($this->getParam('price_limits')[0]) && $this->getParam('price_limits')[0] == 'auto') {
-				$this->setParam('price_limits')[0] = $this->lastPrice - 200;
+				$this->params['price_limits'][0] = $this->lastPrice - 200;
+				$this->params['price_limits'][1] = $this->lastPrice + 200;
 			}
-
-            if (isset($this->getParam('price_limits')[1]) && $this->getParam('price_limits')[1] == 'auto') {
-				$this->setParam('price_limits')[1] = $this->lastPrice + 200;
-			}
-
-//			$levels = $this->getParam('discrete_levels');
-//
-//			if ($levels['l1'] == 'auto' || $levels['l2'] == 'auto' || $levels['l3'] == 'auto') {
-//				$this->setParam(
-//					'discrete_levels', [
-//						'low'  => 10,
-//						'mid'  => 50,
-//						'high' => 100
-//				]);
-//			}
-			//
 
             if ($order['price'] > $this->getParam('price_limits')[0]
                 && $order['price'] < $this->getParam('price_limits')[1]
@@ -280,6 +265,18 @@ class Orderbook extends Command
         return $bgPrice;
     }
 
+    protected function getLastUpdated()
+    {
+        $df = 0;
+        $tt = $this->getInstrument('timestamp');
+        $dt = new \DateTime($tt);
+        $dn = time();
+        $ts = $dt->format('U');
+        $df = abs($ts - $dn);
+
+        return $df;
+    }
+
     /**
      * @param float $price
      */
@@ -314,13 +311,17 @@ class Orderbook extends Command
            'http' => ['timeout' => 30]
         ]);
 
-        $contents = file_get_contents($this->getParam('bitmex')['api_url_instrument'] . $symbol, false, $ctx);
+	$idx = '';
+	$rand = rand(0, 10000);
+        if ($rand > 5000) { $idx = '2'; }
+
+        $contents = file_get_contents($this->getParam('bitmex')['api_url_instrument' . $idx] . $symbol, false, $ctx);
 
         if ($contents === false) {
             return false;
         }
 
-        $data = json_decode(file_get_contents($this->getParam('bitmex')['api_url_instrument'] . $symbol), JSON_OBJECT_AS_ARRAY, 2147483646);
+        $data = json_decode(file_get_contents($this->getParam('bitmex')['api_url_instrument' . $idx] . $symbol), JSON_OBJECT_AS_ARRAY, 2147483646);
 
 //        $this->instrument = $data[0][0];
         $this->instrument = $data[0];
@@ -425,6 +426,8 @@ class Orderbook extends Command
             system('chmod +rw ' . $file);
         }
 
+        $layout = file_get_contents(config('app.html_path') . '/layout.html');
+
         file_put_contents($file,
             $this->tableHTMLPage(
                 [
@@ -433,12 +436,14 @@ class Orderbook extends Command
                     '<span id="currentPrice" class="p-1 px-2 '
                         . $this->symbol . ': '
                         . $this->getPriceBackgroundColorHTML($this->prevLastPrice, $this->getLastPrice()) . '">'
-                        . $this->toFloat($this->getLastPrice()) .
+                        . $this->toFloat($this->getLastPrice()) . ' [ dl: ' . $this->getLastUpdated() . ' ]' .
                     '</span>',
                     'Price',
                     'Buy'
                 ],
-                $orderbookHTML
+                $orderbookHTML,
+                $layout,
+                300
             )
         );
 
@@ -460,29 +465,43 @@ class Orderbook extends Command
     /**
      * @param array $headers
      * @param array $data
+     * @param string $layout
      * @param integer $refresh
      *
      * @return string
      */
-    public function tableHTMLPage($headers, $data, $refresh = 180)
+    public function tableHTMLPage($headers, $data, $layout, $refresh = 180)
     {
+        $content  = $this->genTableHtml($headers, $data, true, $this->filename);
+        $filename = 'http://dev.huemae.ru/' . strtolower($this->filename);
+        $title    = $this->toFloat($this->getLastPrice());
+        $js       = $this->js;
+        $css      = $this->styles;
+
+        //$out = str_replace($search, $replace, $layout);
+
+        $out = $layout;
+        $out = str_replace("#REFRESH#", $refresh, $out);
+        $out = str_replace("#FILENAME#", $filename, $out);
+        $out = str_replace("#TITLE#", $title, $out);
+        $out = str_replace("#JS#", $js, $out);
+        $out = str_replace("#CSS#", $css, $out);
+        $out = str_replace("#CONTENT#", $content, $out);
+
+        return $out;
+
         $out = '
         <!doctype html><html lang="en">
             <head>
                 <meta http-equiv="refresh" content="' . $refresh . ';url=http://dev.huemae.ru/' . strtolower($this->filename) . '.html" />
                 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-                
                 <title>' . $this->toFloat($this->getLastPrice()) . '</title>
-                
                 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
                 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-                
                 <script type="text/javascript">
                     ' . $this->js . '
                 </script>
-                
                 <style>' . $this->styles . '</style>
             </head>
             <body>
@@ -490,21 +509,29 @@ class Orderbook extends Command
                     <span class="sr-only">Loading...</span>
                 </div>
                 <div class="container">
+                  <div id="instrument-tools" class="row" style="display: none;">
+                    <div class="col-6">
+                      <a type="button" class="btn btn-outline-secondary btn-sm" value="XBTUSD Zoom" href="/xbtusd_zoom.html">XBTUSD Zoom</a>
+                      <a type="button" class="btn btn-outline-dark btn-sm" value="XBTUSD" href="/xbtusd.html">XBTUSD</a>
+                    </div>
+                    <div class="col-6"></div>
+                  </div>
                   <div class="row">
-                    <div class="col-12" id="mainFrame">                    
+                    <div class="col-6" id="mainFrame">
         ';
 
         $out .= $this->genTableHtml($headers, $data, true, $this->filename);
         $out .= '
                     </div>
+                    <div class="col-6"></div>
               </div>
-            </div>            
+            </div>
         ';
 //        $out .= '
 //                    </div>
 //                <div class="col-4">' . $this->getLegend($this->getParam('discrete_levels')) . '</div>
 //              </div>
-//            </div>            
+//            </div>
 //        ';
 
         return $out . '
@@ -872,7 +899,11 @@ class Orderbook extends Command
     protected function getAPIUrl($symbol = 'ETHUSD') {
         $exchange = $this->getParam('bitmex');
 
-        return str_replace(['{symbol}', '{depth}'], [$symbol, $exchange['depth']], $exchange['api_url']);
+	$idx = '';
+	$rand = rand(0, 10000);
+        if ($rand > 5000) { $idx = '2'; }
+
+        return str_replace(['{symbol}', '{depth}'], [$symbol, $exchange['depth']], $exchange['api_url' . $idx]);
     }
 
     /**

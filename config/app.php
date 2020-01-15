@@ -31,6 +31,7 @@ return [
 
             'bitmex' => [
                 'host' => 'http://dev.huemae.ru',
+                'host2' => 'http://dev.huemae.ru',
                 'port' => 4444,
 
                 'pt_orderbook'  => 'orderBookL2?symbol={symbol}&depth={depth}',
@@ -40,6 +41,8 @@ return [
 
                 'api_url'            => 'http://dev.huemae.ru:4444/orderBookL2?symbol={symbol}&depth={depth}',
                 'api_url_instrument' => 'http://dev.huemae.ru:4444/instrument?symbol=',
+                'api_url2'            => 'http://dev.huemae.ru:4444/orderBookL2?symbol={symbol}&depth={depth}',
+                'api_url_instrument2' => 'http://dev.huemae.ru:4444/instrument?symbol=',
             ],
 
             'schema'          => 'discrete_levels', // 'quoter_average',

@@ -1,0 +1,34 @@
+       <!doctype html><html lang="en">
+            <head>
+                <meta http-equiv="refresh" content="#REFRESH#;url=#FILENAME#.html" />
+                <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+                <title>#TITLE#</title>
+                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+                <script type="text/javascript">
+                      #JS#
+                </script>
+                <style>#CSS#</style>
+            </head>
+            <body>
+                <div class="spinner-border text-secondary" id="spinner" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="container">
+                  <div id="instrument-tools" class="row" style="display: none;">
+                    <div class="col-9">
+                      <a type="button" class="btn btn-outline-secondary btn-sm" value="XBTUSD Zoom" href="/xbtusd_zoom.html">XBTUSD Zoom</a>
+                      <a type="button" class="btn btn-outline-dark btn-sm" value="XBTUSD" href="/xbtusd.html">XBTUSD</a>
+                    </div>
+                    <div class="col-3"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-9" id="mainFrame">
+                      #CONTENT#
+                    </div>
+                    <div class="col-3"></div>
+                 </div>
+               </div>
+            </body>
+            </html>

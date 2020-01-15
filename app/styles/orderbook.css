@@ -52,3 +52,16 @@ td span {
 #instrument_info {
     display: none;
 }
+
+.bg-danger {
+    background-color: #ab0a20 !important;
+    color: #ffffff !important;
+}
+
+.bg-warning {
+    background-color: #d03131 !important;
+}
+
+.bg-secondary {
+    background-color: #b96868 !important;
+}

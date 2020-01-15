@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 php /screener/ethla orderbook:get --symbol=XBTUSD \
     --f=xbtusd_zoom \
-    --pf=6795 \
-    --pt=8005 \
+    --pf='auto' \
+    --pt='auto' \
     --s=1 --limit=50 \
-    --l1=100 --l2=200 --l3=300 \
+    --l1=150 --l2=200 --l3=300 \
     --schema=discrete_levels \
     --floating=2
 exit 1
